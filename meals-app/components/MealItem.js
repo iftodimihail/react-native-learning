@@ -7,13 +7,24 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-function MealItem({ title, imageUrl, duration, complexity, affordability }) {
+function MealItem({
+  id,
+  title,
+  imageUrl,
+  duration,
+  complexity,
+  affordability,
+}) {
+  const { navigate } = useNavigation();
+
   return (
     <View style={styles.rootContainer}>
       <Pressable
         android_ripple={{ color: "#ccc" }}
         style={({ pressed }) => (pressed ? { opacity: 0.6 } : null)}
+        onPress={() => navigate("meal-info", { mealId: id })}
       >
         <View style={styles.innerContainer}>
           <View>
@@ -40,7 +51,7 @@ function MealItem({ title, imageUrl, duration, complexity, affordability }) {
 
 const styles = StyleSheet.create({
   rootContainer: {
-    marginBottom: 12,
+    marginBottom: 16,
     backgroundColor: "white",
     elevation: 4,
     shadowColor: "black",

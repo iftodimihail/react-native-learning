@@ -1,6 +1,6 @@
 {
   "extends": ["airbnb", "prettier", "plugin:node/recommended"],
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "react-hooks"],
   "rules": {
     "prettier/prettier": "error",
     "spaced-comment": "off",
@@ -22,7 +22,9 @@
         "optionalDependencies": false,
         "peerDependencies": false
       }
-    ]
+    ],
+    "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
+    "react-hooks/exhaustive-deps": "warn" // Checks effect dependencies
   },
   "parserOptions": {
     "ecmaVersion": "latest"

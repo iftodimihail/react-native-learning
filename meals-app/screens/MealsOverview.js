@@ -27,7 +27,7 @@ function MealsOverview({ route, navigation }) {
         data={meals}
         keyExtractor={({ id }) => id}
         renderItem={({ item }) => <MealItem {...item} />}
-        style={{ flex: 1, padding: 16 }}
+        style={styles.flatListContainer}
       />
     </View>
   );
@@ -36,6 +36,7 @@ function MealsOverview({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom: 16,
   },
   flatListContainer: { flex: 1, padding: 16 },
 });
