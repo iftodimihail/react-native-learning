@@ -8,7 +8,15 @@ function ExpensesOutput({ expenses, period }) {
   return (
     <View style={styles.rootContainer}>
       <ExpensesSummary expenses={expenses} period={period} />
-      <ExpensesList expenses={expenses} />
+      {expenses.length > 0 ? (
+        <ExpensesList expenses={expenses} />
+      ) : (
+        <View style={styles.fallbackTextContainer}>
+          <Text style={styles.noExpensesText}>
+            There are no expenses at the moment!
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -18,6 +26,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 24,
     backgroundColor: GlobalStyles.colors.primary700,
+  },
+  fallbackTextContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  noExpensesText: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "white",
+    textAlign: "center",
   },
 });
 

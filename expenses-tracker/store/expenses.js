@@ -1,46 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getAllExpenses } from "../utils/http";
+
+export const getExpenses = createAsyncThunk(
+  "expenses/getExpensesStatus",
+  async () => {
+    const data = await getAllExpenses();
+    return [...data].reverse();
+  }
+);
 
 const expensesSlice = createSlice({
   name: "expenses",
   initialState: {
-    expenses: [
-      {
-        id: "e1",
-        description: "Books",
-        amount: 29.99,
-        date: new Date("2023-03-07").toISOString(),
-      },
-      {
-        id: "e2",
-        description: "Pair of trousers",
-        amount: 19.99,
-        date: new Date("2023-03-09").toISOString(),
-      },
-      {
-        id: "e3",
-        description: "Membership",
-        amount: 39.59,
-        date: new Date("2023-03-10").toISOString(),
-      },
-      {
-        id: "e4",
-        description: "Pair of shoes",
-        amount: 59.99,
-        date: new Date("2023-03-14").toISOString(),
-      },
-      {
-        id: "e5",
-        description: "T-shirt",
-        amount: 10.12,
-        date: new Date("2023-03-15").toISOString(),
-      },
-      {
-        id: "e6",
-        description: "Bananas",
-        amount: 4.99,
-        date: new Date("2023-03-16").toISOString(),
-      },
-    ],
+    expenses: [],
+    loading: false,
   },
   reducers: {
     addExpense: (state, { payload }) => {
@@ -63,6 +36,20 @@ const expensesSlice = createSlice({
         ...payload.data,
       };
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getExpenses.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getExpenses.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.expenses = payload;
+      })
+      .addCase(getExpenses.rejected, (state) => {
+        state.loading = false;
+        state.expenses = [];
+      });
   },
 });
 
