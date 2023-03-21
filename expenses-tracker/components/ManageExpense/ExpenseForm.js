@@ -7,22 +7,22 @@ import Button from "../UI/Button";
 import Input from "../UI/Input";
 
 import { GlobalStyles } from "../../constants/styles";
-import { addExpense, deleteExpense, updateExpense } from "../../store/expenses";
+import { addEditExpense, deleteExpense } from "../../store/expenses";
 import IconButton from "../UI/IconButton";
-import { createExpense } from "../../utils/http";
+import LoadingOverlay from "../UI/LoadingOverlay";
 
-function ExpenseForm({ expenses, addExpense, deleteExpense, updateExpense }) {
+function ExpenseForm({ expenses, addEditExpense, deleteExpense, isLoading }) {
   const route = useRoute();
   const { setOptions, goBack } = useNavigation();
   const expenseId = route.params?.expenseId;
 
   const [inputs, setInputs] = useState({
     amount: {
-      value: "",
+      value: "23.23",
       isValid: true,
     },
     date: {
-      value: "",
+      value: "2023-03-21",
       isValid: true,
     },
     description: {
@@ -66,7 +66,7 @@ function ExpenseForm({ expenses, addExpense, deleteExpense, updateExpense }) {
     goBack();
   }
 
-  function confirmHandler() {
+  async function confirmHandler() {
     const payload = {
       amount: +inputs.amount.value,
       date: new Date(inputs.date.value),
@@ -100,18 +100,17 @@ function ExpenseForm({ expenses, addExpense, deleteExpense, updateExpense }) {
 
     payload.date = payload.date.toISOString().slice(0, 10);
 
-    if (expenseId) {
-      updateExpense({ expenseId, data: payload });
-    } else {
-      addExpense({ data: payload });
-      createExpense(payload);
-    }
+    await addEditExpense({ id: expenseId, ...payload });
     goBack();
   }
 
-  function deleteExpenseHandler() {
-    deleteExpense({ expenseId });
+  async function deleteExpenseHandler() {
+    await deleteExpense(expenseId);
     goBack();
+  }
+
+  if (isLoading) {
+    return <LoadingOverlay />;
   }
 
   return (
@@ -206,8 +205,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect((state) => ({ expenses: state.expenses.expenses }), {
-  addExpense,
-  deleteExpense,
-  updateExpense,
-})(ExpenseForm);
+export default connect(
+  (state) => ({
+    expenses: state.expenses.expenses,
+    isLoading: state.expenses.loading,
+  }),
+  {
+    addEditExpense,
+    deleteExpense,
+  }
+)(ExpenseForm);

@@ -5,8 +5,10 @@ const baseURL =
 
 const expensesURL = `${baseURL}/expenses.json`;
 
-export function createExpense(data) {
-  axios.post(expensesURL, data);
+export async function createExpense(data) {
+  const response = await axios.post(expensesURL, data);
+
+  return response;
 }
 
 export async function getAllExpenses() {
@@ -18,6 +20,12 @@ export async function getAllExpenses() {
   }));
 }
 
-export function updateExpense(id, data) {
-  axios.put(`${expensesURL}/${id}`, data);
+export async function updateExpense(id, data) {
+  const response = await axios.put(`${baseURL}/expenses/${id}.json`, data);
+  return response;
+}
+
+export async function axiosDeleteExpense(id) {
+  const response = await axios.delete(`${baseURL}/expenses/${id}.json`);
+  return response;
 }
